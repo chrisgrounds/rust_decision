@@ -1,24 +1,39 @@
 use serde::Serialize;
-
-pub type Questions<T> = Vec<Question<T>>;
+use std::collections::HashMap;
 
 #[derive(Clone, Debug, Serialize)]
 pub enum Question<T> {
-  ChoiceQuestion { context: Context },
-  ScoreQuestion { context: Context },
-  NoulQuestion { context: Context },
+  ChoiceQuestion {
+    instructions: Instructions,
+    choices: T,
+  },
+  ScoreQuestion {
+    instructions: Instructions,
+  },
+  NoulQuestion {
+    instructions: Instructions,
+  },
 }
 
 #[derive(Clone, Debug, Serialize)]
-pub struct Context;
+pub struct Instructions(String);
 
-// {
-//   "state": "Help! My payouts have been failing for 3 days.",
-//   "model": "jev-latest",
-//   "questions": {
-//     "is_urgent": {
-//       "type": "noul",
-//       "instructions": "Does this convey urgency?"
-//     }
-//   }
-// }
+#[derive(Clone, Debug, Serialize)]
+pub struct State;
+
+/// Example
+/// {
+///   "state": "Help! My payouts have been failing for 3 days.",
+///   "model": "jev-latest",
+///   "questions": {
+///     "is_urgent": {
+///       "type": "noul",
+///       "instructions": "Does this convey urgency?"
+///     }
+///   }
+/// }
+pub struct Envelope<T> {
+  pub state: State,
+  pub model: String,
+  pub questions: HashMap<String, Question<T>>,
+}
