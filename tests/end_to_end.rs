@@ -15,7 +15,7 @@ async fn choice() {
     "department".to_owned(),
     Question::Choice(ChoiceQuestion::new(
       "Which team should handle this?".to_owned(),
-      HashMap::from([("billing", "Payments"), ("technical", "Outages")]),
+      [("billing", "Payments"), ("technical", "Outages")],
     )),
   )]);
 
@@ -23,6 +23,8 @@ async fn choice() {
     .post(&client, "I was charged twice.".to_owned(), questions)
     .await
     .expect("choice request failed");
+
+  println!("response: {response:?}");
 
   let Answer::ChoiceAnswer {
     choice,
@@ -61,6 +63,8 @@ async fn score() {
     .await
     .expect("score request failed");
 
+  println!("response: {response:?}");
+
   let Answer::ScoreAnswer {
     score,
     legend,
@@ -92,6 +96,8 @@ async fn noul() {
     )
     .await
     .expect("noul request failed");
+
+  println!("response: {response:?}");
 
   let Answer::NoulAnswer { noul } = &response.answers["urgent"] else {
     panic!("expected a noul answer");
