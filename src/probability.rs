@@ -50,6 +50,30 @@ impl<'de> serde::de::Visitor<'de> for ProbabilityVisitor {
   {
     Probability::new(v).map_err(serde::de::Error::custom)
   }
+
+  fn visit_f64<E>(self, v: f64) -> Result<Self::Value, E>
+  where
+    E: serde::de::Error,
+  {
+    if !(0.0..=1.0).contains(&v) {
+      return Err(E::custom(OutOfBounds));
+    }
+    self.visit_f32(v as f32)
+  }
+
+  fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
+  where
+    E: serde::de::Error,
+  {
+    self.visit_f64(v as f64)
+  }
+
+  fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
+  where
+    E: serde::de::Error,
+  {
+    self.visit_f64(v as f64)
+  }
 }
 
 #[cfg(test)]
