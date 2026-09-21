@@ -1,6 +1,5 @@
-use std::{collections::HashMap, fmt};
-
 use serde::Deserialize;
+use std::{collections::HashMap, fmt};
 
 pub type Probabilities = HashMap<String, Probability>;
 

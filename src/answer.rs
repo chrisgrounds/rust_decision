@@ -1,6 +1,7 @@
-pub use crate::probability::{OutOfBounds, Probabilities, Probability};
 use serde::Deserialize;
 use std::collections::HashMap;
+
+pub use crate::probability::{OutOfBounds, Probabilities, Probability};
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Response {
