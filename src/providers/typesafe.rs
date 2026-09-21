@@ -1,4 +1,3 @@
-use serde::Serialize;
 use std::collections::HashMap;
 
 use crate::{
@@ -14,11 +13,11 @@ pub struct TypesafeJev;
 const API_URL: &str = "https://api.typesafe.ai/v1/systemone";
 
 impl Provider for TypesafeJev {
-  async fn post<T: Serialize + Send>(
+  async fn post(
     &self,
     client: &Client,
     state: String,
-    questions: HashMap<String, Question<T>>,
+    questions: HashMap<String, Question>,
   ) -> Result<Response, ProviderError> {
     let envelope = Envelope::new(state, "jev-latest".to_owned(), questions);
     let body = serde_json::to_string(&envelope).map_err(ProviderError::SerdeError)?;

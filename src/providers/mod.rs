@@ -1,4 +1,3 @@
-use serde::Serialize;
 use std::{collections::HashMap, error::Error, fmt};
 
 use crate::{answer::Response, client::Client, question::Question};
@@ -6,11 +5,11 @@ use crate::{answer::Response, client::Client, question::Question};
 pub mod typesafe;
 
 pub trait Provider {
-  fn post<T: Serialize + Send>(
+  fn post(
     &self,
     client: &Client,
     state: String,
-    questions: HashMap<String, Question<T>>,
+    questions: HashMap<String, Question>,
   ) -> impl std::future::Future<Output = Result<Response, ProviderError>> + Send;
 }
 

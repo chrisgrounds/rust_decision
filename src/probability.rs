@@ -4,7 +4,7 @@ use std::{collections::HashMap, fmt};
 pub type Probabilities = HashMap<String, Probability>;
 
 #[derive(Clone, Debug)]
-pub struct Probability(pub f32);
+pub struct Probability(f32);
 
 #[derive(Clone, Debug)]
 pub struct OutOfBounds;
@@ -15,13 +15,23 @@ impl fmt::Display for OutOfBounds {
   }
 }
 
-impl Probability {
-  fn new(value: f32) -> Result<Self, OutOfBounds> {
+impl std::error::Error for OutOfBounds {}
+
+impl TryFrom<f32> for Probability {
+  type Error = OutOfBounds;
+
+  fn try_from(value: f32) -> Result<Self, Self::Error> {
     if !(0.0..=1.0).contains(&value) {
       return Err(OutOfBounds);
     }
 
     Ok(Probability(value))
+  }
+}
+
+impl Probability {
+  pub fn get(&self) -> f32 {
+    self.0
   }
 }
 
@@ -47,7 +57,7 @@ impl<'de> serde::de::Visitor<'de> for ProbabilityVisitor {
   where
     E: serde::de::Error,
   {
-    Probability::new(v).map_err(serde::de::Error::custom)
+    Probability::try_from(v).map_err(serde::de::Error::custom)
   }
 
   fn visit_f64<E>(self, v: f64) -> Result<Self::Value, E>
@@ -89,7 +99,7 @@ mod tests {
 
       match result {
         Ok(probability) => {
-          (0.0..=1.0).contains(&value) && probability.0 == value
+          (0.0..=1.0).contains(&value) && probability.get() == value
         }
         Err(_) => !(0.0..=1.0).contains(&value),
       }
@@ -100,7 +110,7 @@ mod tests {
   fn deserializes_probabilities_within_bounds() {
     for value in [0.1, 0.5, 0.9] {
       let probability = Probability::deserialize(F32Deserializer::<Error>::new(value)).unwrap();
-      assert_eq!(probability.0, value);
+      assert_eq!(probability.get(), value);
     }
   }
 
@@ -108,7 +118,7 @@ mod tests {
   fn deserializes_inclusive_boundaries() {
     for value in [0.0, 1.0] {
       let probability = Probability::deserialize(F32Deserializer::<Error>::new(value)).unwrap();
-      assert_eq!(probability.0, value);
+      assert_eq!(probability.get(), value);
     }
   }
 

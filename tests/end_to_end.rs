@@ -42,7 +42,7 @@ async fn score() {
   let client = Client::from_env().expect("set DECISION_API_KEY");
   let questions = HashMap::from([(
     "frustration".to_owned(),
-    Question::<()>::Score(ScoreQuestion::new(
+    Question::Score(ScoreQuestion::new(
       "How frustrated is the customer?".to_owned(),
       vec![
         "Calm".to_owned(),
@@ -81,7 +81,7 @@ async fn noul() {
   let client = Client::from_env().expect("set DECISION_API_KEY");
   let questions = HashMap::from([(
     "urgent".to_owned(),
-    Question::<()>::Noul(NoulQuestion::new("Is this urgent?".to_owned())),
+    Question::Noul(NoulQuestion::new("Is this urgent?".to_owned())),
   )]);
 
   let response = TypesafeJev
@@ -96,5 +96,5 @@ async fn noul() {
   let Answer::NoulAnswer { noul } = &response.answers["urgent"] else {
     panic!("expected a noul answer");
   };
-  assert!((0.0..=1.0).contains(&noul.0));
+  assert!((0.0..=1.0).contains(&noul.get()));
 }

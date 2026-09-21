@@ -1,25 +1,35 @@
 use serde::Serialize;
+use std::collections::HashMap;
+
+pub type Choices = HashMap<String, String>;
 
 #[derive(Clone, Debug, Serialize)]
 #[serde(tag = "type", rename_all = "lowercase")]
-pub enum Question<T> {
-  Choice(ChoiceQuestion<T>),
+pub enum Question {
+  Choice(ChoiceQuestion),
   Score(ScoreQuestion),
   Noul(NoulQuestion),
 }
 
 #[derive(Clone, Debug, Serialize)]
-pub struct ChoiceQuestion<T> {
+pub struct ChoiceQuestion {
   pub instructions: Instructions,
   #[serde(rename = "criteria")]
-  pub choices: T,
+  pub choices: Choices,
 }
 
-impl<T> ChoiceQuestion<T> {
-  pub fn new(instructions: String, choices: T) -> Self {
+impl ChoiceQuestion {
+  pub fn new<K, V>(instructions: String, choices: impl IntoIterator<Item = (K, V)>) -> Self
+  where
+    K: Into<String>,
+    V: Into<String>,
+  {
     Self {
       instructions: Instructions(instructions),
-      choices,
+      choices: choices
+        .into_iter()
+        .map(|(key, value)| (key.into(), value.into()))
+        .collect(),
     }
   }
 }
