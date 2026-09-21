@@ -1,6 +1,6 @@
 pub mod answer;
 pub mod client;
-pub mod envelope;
+mod envelope;
 pub mod probability;
 pub mod providers;
 pub mod question;

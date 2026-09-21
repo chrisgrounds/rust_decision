@@ -5,6 +5,7 @@ use serde::Serialize;
 use crate::{
   answer::Response,
   client::Client,
+  envelope::Envelope,
   providers::{Provider, ProviderError},
   question::Question,
 };
@@ -19,18 +20,13 @@ impl Provider for TypesafeJev {
     questions: HashMap<String, Question<T>>,
   ) -> Result<Response, ProviderError> {
     let url = "https://api.typesafe.ai/v1/systemone";
+    let envelope = Envelope::new(state, "jev-latest".to_owned(), questions);
+    let body = serde_json::to_string(&envelope).map_err(ProviderError::SerdeError)?;
     let response = client
       .http_client
       .post(url)
       .header(reqwest::header::CONTENT_TYPE, "application/json")
-      .body(
-        serde_json::json!({
-          "model": "jev-latest",
-          "state": state,
-          "questions": questions
-        })
-        .to_string(),
-      )
+      .body(body)
       .bearer_auth(&client.decision_api_key.0)
       .send()
       .await
