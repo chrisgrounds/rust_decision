@@ -1,39 +1,45 @@
 use serde::Serialize;
-use std::collections::HashMap;
 
 #[derive(Clone, Debug, Serialize)]
-pub enum Question<T> {
-  ChoiceQuestion {
-    instructions: Instructions,
-    choices: T,
-  },
-  ScoreQuestion {
-    instructions: Instructions,
-  },
-  NoulQuestion {
-    instructions: Instructions,
-  },
+pub struct ChoiceQuestion<T> {
+  pub instructions: Instructions,
+  pub choices: T,
+}
+
+impl<T> ChoiceQuestion<T> {
+  pub fn new(instructions: String, choices: T) -> Self {
+    Self {
+      instructions: Instructions(instructions),
+      choices,
+    }
+  }
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct ScoreQuestion {
+  pub instructions: Instructions,
+}
+
+impl ScoreQuestion {
+  pub fn new(instructions: String) -> Self {
+    Self {
+      instructions: Instructions(instructions),
+    }
+  }
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct NoulQuestion {
+  pub instructions: Instructions,
+}
+
+impl NoulQuestion {
+  pub fn new(instructions: String) -> Self {
+    Self {
+      instructions: Instructions(instructions),
+    }
+  }
 }
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Instructions(String);
-
-#[derive(Clone, Debug, Serialize)]
-pub struct State;
-
-/// Example
-/// {
-///   "state": "Help! My payouts have been failing for 3 days.",
-///   "model": "jev-latest",
-///   "questions": {
-///     "is_urgent": {
-///       "type": "noul",
-///       "instructions": "Does this convey urgency?"
-///     }
-///   }
-/// }
-pub struct Envelope<T> {
-  pub state: State,
-  pub model: String,
-  pub questions: HashMap<String, Question<T>>,
-}
