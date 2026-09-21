@@ -14,7 +14,7 @@ pub struct TypesafeJev;
 impl Provider for TypesafeJev {
   async fn post<T: Serialize + Send>(
     &self,
-    client: Client,
+    client: &Client,
     state: String,
     questions: HashMap<String, Question<T>>,
   ) -> Result<Response, ProviderError> {

@@ -9,7 +9,7 @@ pub mod typesafe;
 pub trait Provider {
   fn post<T: Serialize + Send>(
     &self,
-    client: Client,
+    client: &Client,
     state: String,
     questions: HashMap<String, Question<T>>,
   ) -> impl std::future::Future<Output = Result<Response, ProviderError>> + Send;
