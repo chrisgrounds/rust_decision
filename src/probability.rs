@@ -1,8 +1,8 @@
-use std::fmt;
+use std::{collections::HashMap, fmt};
 
 use serde::Deserialize;
 
-pub type Probabilities = Vec<Probability>;
+pub type Probabilities = HashMap<String, Probability>;
 
 #[derive(Clone, Debug)]
 pub struct Probability(pub f32);
