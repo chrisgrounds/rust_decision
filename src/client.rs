@@ -1,5 +1,6 @@
 pub struct Client {
   api_key: ApiKey,
+  pub http_client: reqwest::Client,
 }
 
 #[derive(Clone, Debug)]
@@ -9,6 +10,7 @@ impl Client {
   pub fn new(api_key: String) -> Self {
     Self {
       api_key: ApiKey(api_key),
+      http_client: reqwest::Client::new(),
     }
   }
 }
