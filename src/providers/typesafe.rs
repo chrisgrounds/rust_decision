@@ -12,6 +12,8 @@ use crate::{
 
 pub struct TypesafeJev;
 
+const API_URL: &str = "https://api.typesafe.ai/v1/systemone";
+
 impl Provider for TypesafeJev {
   async fn post<T: Serialize + Send>(
     &self,
@@ -19,12 +21,12 @@ impl Provider for TypesafeJev {
     state: String,
     questions: HashMap<String, Question<T>>,
   ) -> Result<Response, ProviderError> {
-    let url = "https://api.typesafe.ai/v1/systemone";
     let envelope = Envelope::new(state, "jev-latest".to_owned(), questions);
     let body = serde_json::to_string(&envelope).map_err(ProviderError::SerdeError)?;
+
     let response = client
       .http_client
-      .post(url)
+      .post(API_URL)
       .header(reqwest::header::CONTENT_TYPE, "application/json")
       .body(body)
       .bearer_auth(&client.decision_api_key.0)
@@ -32,15 +34,11 @@ impl Provider for TypesafeJev {
       .await
       .map_err(ProviderError::HttpError)?
       .error_for_status()
-      .map_err(ProviderError::HttpError)?;
-
-    let body = response
+      .map_err(ProviderError::HttpError)?
       .text()
       .await
       .map_err(|e| ProviderError::HttpError(e))?;
 
-    let response: Response = serde_json::from_str(&body).map_err(ProviderError::SerdeError)?;
-
-    Ok(response)
+    Ok(serde_json::from_str(&response).map_err(ProviderError::SerdeError)?)
   }
 }
