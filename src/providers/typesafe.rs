@@ -13,7 +13,7 @@ pub struct TypesafeJev;
 const API_URL: &str = "https://api.typesafe.ai/v1/systemone";
 
 impl Provider for TypesafeJev {
-  async fn post(
+  async fn decide(
     &self,
     client: &Client,
     state: String,

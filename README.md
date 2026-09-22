@@ -31,7 +31,7 @@ let questions = HashMap::from([(
 )]);
 
 let response = TypesafeJev
-  .post(&client, state, questions)
+  .decide(&client, state, questions)
   .await
   .map_err(|error| std::io::Error::other(format!("TypeSafe request failed: {error:?}")))?;
 ```
@@ -52,7 +52,7 @@ let questions = HashMap::from([(
 )]);
 
 let response = TypesafeJev
-  .post(&client, state, questions)
+  .decide(&client, state, questions)
   .await
   .map_err(|error| std::io::Error::other(format!("TypeSafe request failed: {error:?}")))?;
 ```
@@ -77,7 +77,7 @@ let questions = HashMap::from([(
 )]);
 
 let response = TypesafeJev
-  .post(&client, state, questions)
+  .decide(&client, state, questions)
   .await
   .map_err(|error| std::io::Error::other(format!("TypeSafe request failed: {error:?}")))?;
 ```

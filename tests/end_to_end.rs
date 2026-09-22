@@ -20,7 +20,7 @@ async fn choice() {
   )]);
 
   let response = TypesafeJev
-    .post(&client, "I was charged twice.".to_owned(), questions)
+    .decide(&client, "I was charged twice.".to_owned(), questions)
     .await
     .expect("choice request failed");
 
@@ -55,7 +55,7 @@ async fn score() {
   )]);
 
   let response = TypesafeJev
-    .post(
+    .decide(
       &client,
       "My payouts have been failing for three days!".to_owned(),
       questions,
@@ -89,7 +89,7 @@ async fn noul() {
   )]);
 
   let response = TypesafeJev
-    .post(
+    .decide(
       &client,
       "Our payment system is down. Help immediately!".to_owned(),
       questions,

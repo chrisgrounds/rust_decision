@@ -5,7 +5,7 @@ use crate::{answer::Response, client::Client, question::Question};
 pub mod typesafe;
 
 pub trait Provider {
-  fn post(
+  fn decide(
     &self,
     client: &Client,
     state: String,
