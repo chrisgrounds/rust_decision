@@ -35,8 +35,8 @@ impl Provider for TypesafeJev {
       .map_err(ProviderError::HttpError)?
       .text()
       .await
-      .map_err(|e| ProviderError::HttpError(e))?;
+      .map_err(ProviderError::HttpError)?;
 
-    Ok(serde_json::from_str(&response).map_err(ProviderError::SerdeError)?)
+    serde_json::from_str(&response).map_err(ProviderError::SerdeError)
   }
 }
